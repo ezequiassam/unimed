@@ -61,7 +61,7 @@ public class UnimedTUI {
 		agendaMedico.add(ag2);
 		agendaMedico.add(ag3);
 		agendaMedico.add(ag4);
-		MedicoBoDAO.adicionarMedicoBo("Murilo", "7956cas", agendaMedico);
+		//MedicoBoDAO.adicionarMedicoBo("Murilo", "7956cas", agendaMedico);
 	}
 
 }

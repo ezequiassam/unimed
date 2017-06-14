@@ -1,3 +1,5 @@
+<%@page import="br.ucsal.unimed.dominio.Paciente"%>
+<%@page import="br.ucsal.unimed.dominio.Medico"%>
 <%@page import="br.ucsal.unimed.dominio.Agenda"%>
 <%@page import="br.ucsal.unimed.regras.MedicoBO"%>
 <%@page import="br.ucsal.unimed.tui.UnimedTUI"%>
@@ -28,10 +30,16 @@
 		<h1>Marcar Consulta</h1>
 		<p>
 			<br>
+			<%
+				Paciente p = new Paciente();
+				p.setNome("nome do paciente");
+				p.setCpf("cpf do paciente");
+				out.print("Paciente:  " + p.getNome());
+			%>
+		
 		<div class="row">
 			<div class="col-md-7">
-				<form class="form-horizontal" action="AgendamentoServlet"
-					method="post">
+				<form class="form-horizontal" action="consulta" method="post">
 					<div class="form-group">
 						<label for="medico">Medico</label> <input type="text"
 							class="form-control" id="medico" name="nomeMedico"
@@ -44,18 +52,18 @@
 			</div>
 		</div>
 		<%
-			MedicoBO medicoBO = (MedicoBO) request.getAttribute("medicoBO");
-			if (medicoBO == null) {
+			Medico medico = (Medico) request.getAttribute("medico");
+			if (medico == null) {
 				String erro = (String) request.getAttribute("erro");
 				if (erro != null && !erro.trim().equals("")) {
 					out.print(erro);
 				}
 			} else {
-				out.print("<b>Medico: </b>" + medicoBO.getMedico().getNome());
-				
+				out.print("<b>Medico: </b>" + medico.getNome());
+
 				out.print("<br>Datas disponiveis :");
-				for(Agenda agenda : medicoBO.getAgenda()){
-					System.out.print(agenda.getData().toString());
+				for (Agenda agenda : medico.getAgendaMedico()) {
+					out.print("<br>" + agenda.getData().toString() + "<br>");
 				}
 
 			}

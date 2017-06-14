@@ -1,19 +1,19 @@
 package br.ucsal.unimed.controle;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 import br.ucsal.unimed.dominio.Agenda;
 import br.ucsal.unimed.dominio.Medico;
-import br.ucsal.unimed.regras.MedicoBO;
-import br.ucsal.unimed.repositorio.MedicoBoDAO;
-import br.ucsal.unimed.tui.UnimedTUI;
+import br.ucsal.unimed.dominio.Paciente;
 
 /**
  * Servlet implementation class AgendamentoServlet
@@ -31,43 +31,31 @@ public class AgendamentoServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		UnimedTUI unTui = new UnimedTUI();
-		// unTui.util();
-		// System.out.println(MedicoBoDAO.pesquisarMedicoNome("murilo").getMedico().getNome());
-
-		Medico mboss = MedicoBoDAO.pesquisarMedicoNome("murilo").getMedico();
-		for (Agenda agenda : mboss.getAgendaMedico()) {
-			if (agenda != null) {
-				System.out.println(agenda.getData());
-			}
+		Medico medico = (Medico) request.getAttribute("medico");
+		Paciente paciente = (Paciente) request.getAttribute("paciente");
+		String data = request.getParameter("data");
+		Date dataFormatada = null;
+		try {
+			dataFormatada = new SimpleDateFormat().parse(data);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		String nome = null;
-		// System.out.println("atributo nome =
-		// "+request.getParameter("nomeMedico"));
-		if (request.getParameter("nomeMedico") != null) {
-			nome = (String) request.getParameter("nomeMedico");
-			MedicoBO mbo = MedicoBoDAO.pesquisarMedicoNome(nome);
-			// System.out.println(mbo.getMedico().getCrm());
-			if (mbo != null) {
-				request.setAttribute("medicoBO", mbo);
-				RequestDispatcher d = request.getRequestDispatcher("agendamento.jsp");
-				d.forward(request, response);
-			} else {
-				request.setAttribute("erro", "Medico não Localizado");
-				RequestDispatcher d = request.getRequestDispatcher("agendamento.jsp");
-				d.forward(request, response);
+		for (Agenda agd : medico.getAgendaMedico()) {
+			if (agd.getData().equals(dataFormatada)) {
+				Agenda a = new Agenda();
+				a.setData(dataFormatada);
+				a.setDisponivel(false);
+				a.setPaciente(paciente);
+				break;
 			}
-		} else {
-			request.setAttribute("erro", "Medico não Localizado");
-			RequestDispatcher d = request.getRequestDispatcher("agendamento.jsp");
-			d.forward(request, response);
 		}
 	}
 
