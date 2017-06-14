@@ -1,9 +1,10 @@
 package br.ucsal.unimed.dominio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Medico {
-	private List<Agenda> agendaMedico;
+	private List<Agenda> agendaMedico = new ArrayList<>();
 	private String nome;
 	private String crm;
 
